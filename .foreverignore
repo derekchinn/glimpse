@@ -1,0 +1,6 @@
+logs/*
+client/**/*
+server/static/**/*
+.gitignore
+.git/*
+README.md
