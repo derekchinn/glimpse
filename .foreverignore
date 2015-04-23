@@ -2,5 +2,5 @@ logs/*
 client/**/*
 server/static/**/*
 .gitignore
-.git/*
+.git/**/*
 README.md
