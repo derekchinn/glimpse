@@ -22,17 +22,19 @@ app.set('view engine', '.hbs');
 // Caching
 //app.enable('view cache');
 
-// Command Line Parsing
-var argv = minimist(process.argv.slice(2));
-
 // Routes
-var web = require(path.join(BASE_PATH, 'routes', 'web.js'));
-app.use('/', web);
+var routesBasePath = path.join(BASE_PATH, 'routes');
+var apiRoute = require(path.join(routesBasePath, 'api'));
+var webRoute = require(path.join(routesBasePath, 'web'));
+
+app.use('/api', apiRoute);
+app.use('/', webRoute);
 
 // Static files
 app.use(express.static(path.join(BASE_PATH, 'static')));
 
 // Go server, go!
+var argv = minimist(process.argv.slice(2));
 var port = argv.p || 3000;
 var server = app.listen(port, function () {
     console.log("Express server running on port: " + port);
