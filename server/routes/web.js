@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var debug = require('debug')('glimpse:router:web');
 
-var Planner = require('../planner/planner');
+var Planner = require('../planner/main');
 
 router.get('/', function(req, res) {
     var planner = new Planner({
@@ -10,7 +10,10 @@ router.get('/', function(req, res) {
         type: Planner.types.SMARTSHEET
     });
 
-    res.render('index', {text: planner.apiKey});
+    function cb(err, projects) {
+        res.render('index', {projects: projects});
+    }
+    planner.getProjects(cb);
 });
 
 module.exports = router;

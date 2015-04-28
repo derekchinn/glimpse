@@ -1,13 +1,15 @@
-var debug = require('debug')('glimpse:planner');
+var debug = require('debug')('glimpse:planner:main');
 var Smartsheet = require('../vendors/smartsheet/main');
+var AdapterSmartsheet = require('./adapter-smartsheet');
 
 var Planner = function (opts) {
     opts = opts || {};
 
+    this.adapter = {};
     this.apiKey = opts.apiKey;
-    this.tool = this._toolFactory(opts);
+    this.tool = {};
 
-    this.tool.listProjects(function (err, res, body) { console.log(body); });
+    this._toolFactory(opts);
 };
 
 /**
@@ -29,15 +31,32 @@ Planner.types = {
  * @return {Class Object} An instance of the planning tool to use
  */
 Planner.prototype._toolFactory = function (opts) {
-    var tool;
-
     switch (opts.type) {
         case Planner.types.SMARTSHEET:
-            tool = new Smartsheet(opts);
+            this.tool = new Smartsheet(opts);
+            this.adapter = new AdapterSmartsheet();
             break;
     }
 
-    return tool;
+    return this;
+};
+
+Planner.prototype.getProjects = function (callback) {
+    var self = this;
+    this.tool.listProjects(function (err, res, body) { 
+        if (err) {
+            console.log('Error fetching project data.');
+            return callback(new Error('Failed to fetch project data.'));
+        }
+
+        var projects = [];
+        var body = JSON.parse(body);
+        for (var i = 0, len = body.length; i < len; i++) {
+            projects.push(self.adapter.hydrateProjectModel(body[i]));
+        }
+
+        callback(null, projects);
+    });
 };
 
 module.exports = Planner;

@@ -1,5 +1,8 @@
-<div class="test">
-    <p>Express Handlebars Hello World!</p>
-    <p>{{ text }}</p>
+<div class="hbs-content">
+    <ul>
+    {{#each projects }}
+        <li>{{ this.title }}</li>
+    {{/each }}
+    </ul>
 </div>
 <div id="content"></div>

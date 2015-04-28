@@ -14,10 +14,10 @@ var Smartsheet = function (opts) {
 inherits(Smartsheet, InterfaceTool);
 
 Smartsheet.prototype.listProjects = function (callback) {
-    this.api.sheets.listAllSheets(callback);
+    return this.api.sheets.listAllSheets(callback);
 };
 
-Smartsheet.prototype.getProjectDetails = function () {
+Smartsheet.prototype.getProjectDetails = function (id, callback) {
     return true;
 };
 
